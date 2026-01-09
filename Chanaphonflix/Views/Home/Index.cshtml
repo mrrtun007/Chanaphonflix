@@ -1,0 +1,193 @@
+﻿@model List<Chanaphonflix.Models.StreamingProduct>
+
+@{
+    ViewData["Title"] = "หน้าหลัก";
+}
+
+<!-- Hero Section -->
+<div class="text-center mb-5">
+    <h1 class="section-title">ร้านขายบัญชีสตรีมมิ่งคุณภาพ</h1>
+    <p class="lead" style="color: #95a5a6;">Netflix • YouTube Premium • Disney+ • HBO • VIU • iQIYI • BeinSports</p>
+    <p style="font-size: 1.2rem; color: #ffffff;">✨ บัญชีไทยแท้ 100% • ราคาถูก • บริการดี • จัดส่งทันที ✨</p>
+</div>
+
+<!-- Service Info Section -->
+<div class="service-info text-center" id="contact">
+    <h3>📞 ช่องทางติดต่อ</h3>
+    <div class="operating-hours">
+        <p><strong>⏰ เวลาทำการ:</strong></p>
+        <p>จันทร์ - ศุกร์: 12:00 - 22:00 น.</p>
+        <p>เสาร์ - อาทิตย์: 10:00 - 22:00 น.</p>
+    </div>
+    <a href="https://line.me/ti/p/~chanaphonflix" class="contact-line" target="_blank">
+        💬 ติดต่อสอบถามผ่าน Line
+    </a>
+</div>
+
+<!-- Products Section -->
+<div id="products">
+    <h2 class="section-title">📦 สินค้าและบริการ</h2>
+
+    <div class="row g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="product-card">
+                    @if (product.IsPopular)
+                    {
+                        <span class="badge badge-custom badge-popular">🔥 ยอดนิยม</span>
+                    }
+
+                    @* Product Image Placeholder *@
+                    <div class="product-image d-flex align-items-center justify-content-center">
+                        <h2 style="margin: 0; color: #ff6b6b;">@product.ServiceName</h2>
+                    </div>
+
+                    <h5 class="product-title">@product.ServiceName</h5>
+                    <p class="text-muted small mb-2">@product.Description</p>
+
+                    <div class="mb-2">
+                        <span class="badge badge-custom @(product.PackageType == "รายเดือน" ? "badge-monthly" : "badge-daily")">
+                            @product.PackageType
+                        </span>
+                        <span class="badge badge-custom @(product.ScreenType == "จอส่วนตัว" ? "badge-private" : "badge-shared")">
+                            @product.ScreenType
+                        </span>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="badge badge-custom" style="background: linear-gradient(90deg, #3498db, #2980b9);">
+                            @product.Quality
+                        </span>
+                    </div>
+
+                    <div class="price-section">
+                        <span class="original-price">@product.OriginalPrice.ToString("N0") ฿</span>
+                        <span class="discounted-price">@product.DiscountedPrice.ToString("N0") ฿</span>
+                    </div>
+
+                    <div class="stock-info">
+                        @if (product.Stock > 10)
+                        {
+                            <span class="stock-available">✓ พร้อมส่ง (@product.Stock ชิ้น)</span>
+                        }
+                        else if (product.Stock > 0)
+                        {
+                            <span class="stock-low">⚠️ เหลือน้อย (@product.Stock ชิ้น)</span>
+                        }
+                        else
+                        {
+                            <span class="stock-out">✕ สินค้าหมด!!</span>
+                        }
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-gradient"
+                                onclick="orderProduct('@product.ServiceName', @product.DiscountedPrice)"
+                                @(product.Stock == 0 ? "disabled" : "")>
+                            🛒 สั่งซื้อ
+                        </button>
+                        <button class="btn btn-outline-custom"
+                                data-bs-toggle="modal"
+                                data-bs-target="#productModal"
+                                onclick="showProductDetails(@product.Id)">
+                            📋 รายละเอียด
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">รายละเอียดสินค้า</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="productModalBody">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">ปิด</button>
+                <button type="button" class="btn btn-gradient" id="orderFromModal">สั่งซื้อเลย</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Product data
+        var products = @Html.Raw(Json.Serialize(Model));
+
+        function showProductDetails(productId) {
+            var product = products.find(p => p.Id === productId);
+            if (!product) return;
+
+            var modalBody = document.getElementById('productModalBody');
+            var orderBtn = document.getElementById('orderFromModal');
+
+            var featuresHtml = product.Features.map(f => `<li>${f}</li>`).join('');
+
+            var stockClass = product.Stock > 10 ? 'stock-available' : (product.Stock > 0 ? 'stock-low' : 'stock-out');
+            var stockText = product.Stock > 0 ? `มีสินค้า ${product.Stock} ชิ้น` : 'สินค้าหมด!!';
+
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="product-image d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <h1 style="margin: 0; color: #ff6b6b;">${product.ServiceName}</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h3>${product.ServiceName}</h3>
+                        <p class="text-muted">${product.Description}</p>
+
+                        <div class="mb-3">
+                            <span class="badge badge-custom ${product.PackageType === 'รายเดือน' ? 'badge-monthly' : 'badge-daily'}">
+                                ${product.PackageType}
+                            </span>
+                            <span class="badge badge-custom ${product.ScreenType === 'จอส่วนตัว' ? 'badge-private' : 'badge-shared'}">
+                                ${product.ScreenType}
+                            </span>
+                            <span class="badge badge-custom" style="background: linear-gradient(90deg, #3498db, #2980b9);">
+                                ${product.Quality}
+                            </span>
+                        </div>
+
+                        <div class="price-section">
+                            <span class="original-price">${product.OriginalPrice} ฿</span>
+                            <span class="discounted-price">${product.DiscountedPrice} ฿</span>
+                        </div>
+
+                        <p class="stock-info ${stockClass}">${stockText}</p>
+
+                        <h6 class="mt-4" style="color: #ff6b6b;">คุณสมบัติเด่น:</h6>
+                        <ul class="feature-list">
+                            ${featuresHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Set up order button
+            orderBtn.disabled = product.Stock === 0;
+            orderBtn.onclick = function() {
+                orderProduct(product.ServiceName, product.DiscountedPrice);
+                bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+            };
+        }
+
+        function orderProduct(productName, price) {
+            // In a real application, this would add to cart or redirect to checkout
+            alert(`กำลังดำเนินการสั่งซื้อ: ${productName}\nราคา: ${price} บาท\n\nกรุณาติดต่อทาง Line เพื่อดำเนินการชำระเงิน`);
+
+            // Optionally redirect to Line
+            // window.open('https://line.me/ti/p/~chanaphonflix', '_blank');
+        }
+    </script>
+}

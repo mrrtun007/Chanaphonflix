@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Chanaphonflix</title>
+    <meta name="description" content="ร้านขายบัญชีสตรีมมิ่งคุณภาพ Netflix, YouTube Premium, Disney+, HBO, VIU, iQIYI บัญชีไทยแท้ 100%" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Chanaphonflix.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    🎬 Chanaphonflix
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">หน้าหลัก</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#products">สินค้า</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">ติดต่อ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#termsModal">เงื่อนไข</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-gradient px-4" href="#" style="border-radius: 20px;">เข้าสู่ระบบ</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container main-container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 style="color: #ff6b6b;">เกี่ยวกับเรา</h5>
+                    <p>ร้านขายบัญชีสตรีมมิ่งคุณภาพ บัญชีไทยแท้ 100% ราคาถูก บริการดี</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 style="color: #ff6b6b;">บริการของเรา</h5>
+                    <p>Netflix, YouTube Premium, Disney+<br/>HBO GO, VIU, iQIYI, BeinSports</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 style="color: #ff6b6b;">ติดต่อเรา</h5>
+                    <p>
+                        <a href="https://line.me/ti/p/~chanaphonflix" class="text-white" target="_blank">Line: @@chanaphonflix</a><br/>
+                        เวลาทำการ: จ-ศ 12:00-22:00<br/>
+                        ส-อา 10:00-22:00
+                    </p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255, 255, 255, 0.1);" />
+            <p class="mb-0">&copy; 2569 - Chanaphonflix - ร้านขายบัญชีสตรีมมิ่งคุณภาพ</p>
+        </div>
+    </footer>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">เงื่อนไขการใช้บริการ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-warning">📋 ข้อกำหนดและเงื่อนไข</h6>
+                    <ul class="feature-list">
+                        <li>บัญชีที่จำหน่ายเป็นบัญชีไทยแท้ 100% สามารถใช้งานได้จริง</li>
+                        <li>ห้ามเปลี่ยนรหัสผ่านหรือข้อมูลบัญชีโดยเด็ดขาด</li>
+                        <li>แพ็กเกจรายวันจะหมดอายุหลังจาก 24 ชั่วโมงนับจากเวลาที่ส่งมอบ</li>
+                        <li>แพ็กเกจรายเดือนจะหมดอายุหลังจาก 30 วันนับจากเวลาที่ส่งมอบ</li>
+                        <li>หากมีปัญหาการใช้งานกรุณาแจ้งภายใน 24 ชั่วโมง</li>
+                        <li>ไม่รับเปลี่ยนหรือคืนเงินกรณีใช้งานไปแล้ว ยกเว้นบัญชีมีปัญหา</li>
+                        <li>จอส่วนตัว = ใช้คนเดียว ไม่มีคนอื่นใช้ร่วม</li>
+                        <li>จอแชร์ = อาจมีผู้ใช้งานร่วมกัน 2-4 คน</li>
+                    </ul>
+                    <hr />
+                    <h6 class="text-warning">⚠️ ข้อควรระวัง</h6>
+                    <ul class="feature-list">
+                        <li>ห้ามแชร์บัญชีให้ผู้อื่นใช้งาน (สำหรับจอส่วนตัว)</li>
+                        <li>หากพบการใช้งานผิดเงื่อนไข ทางร้านขอสงวนสิทธิ์ในการระงับบัญชี</li>
+                        <li>ทางร้านไม่รับผิดชอบหากบัญชีถูกระงับจาก Netflix/Provider โดยตรง</li>
+                    </ul>
+                    <hr />
+                    <h6 class="text-info">💡 วิธีการใช้งาน</h6>
+                    <ul class="feature-list">
+                        <li>หลังจากชำระเงินจะได้รับ Username และ Password</li>
+                        <li>นำไปล็อกอินในแอพหรือเว็บไซต์ของบริการที่สั่งซื้อ</li>
+                        <li>เริ่มใช้งานได้ทันทีหลังจากล็อกอินสำเร็จ</li>
+                        <li>หากมีปัญหาติดต่อทาง Line ได้ตลอดเวลาทำการ</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-gradient" data-bs-dismiss="modal">ยอมรับเงื่อนไข</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
