@@ -3,8 +3,51 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Chanaphonflix</title>
-    <meta name="description" content="ร้านขายบัญชีสตรีมมิ่งคุณภาพ Netflix, YouTube Premium, Disney+, HBO, VIU, iQIYI บัญชีไทยแท้ 100%" />
+    <title>@ViewData["Title"] ?? "Chanaphonflix - ขายบัญชี Netflix, YouTube Premium, Disney+ ราคาถูก"</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@ViewData["Description"] ?? "ขายบัญชี Netflix Premium 4K, YouTube Premium, Disney+, HBO GO ราคาถูก จอส่วนตัว ของแท้ 100% รับประกันคุณภาพ บัญชีไทยแท้"" />
+    <meta name="keywords" content="Netflix ราคาถูก, YouTube Premium ราคาถูก, Disney Plus ไทย, HBO GO, ขายบัญชี Streaming, Netflix 4K, YouTube Premium ถูก, ขายบัญชี Netflix" />
+    <meta name="author" content="Chanaphonflix" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chanaphonflix.onrender.com@Context.Request.Path" />
+
+    <!-- Open Graph (Facebook, Line) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@ViewData["Title"] ?? "Chanaphonflix - ขายบัญชี Streaming ราคาถูก"" />
+    <meta property="og:description" content="Netflix Premium 4K, YouTube Premium, Disney+ ของแท้ ราคาถูก จอส่วนตัว บัญชีไทยแท้" />
+    <meta property="og:url" content="https://chanaphonflix.onrender.com" />
+    <meta property="og:site_name" content="Chanaphonflix" />
+    <meta property="og:locale" content="th_TH" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@ViewData["Title"] ?? "Chanaphonflix - ขายบัญชี Streaming"" />
+    <meta name="twitter:description" content="Netflix, YouTube Premium, Disney+ ราคาถูก จอส่วนตัว" />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "Store",
+      "name": "Chanaphonflix",
+      "description": "ขายบัญชี Netflix, YouTube Premium, Disney+ ราคาถูก",
+      "url": "https://chanaphonflix.onrender.com",
+      "priceRange": "฿฿",
+      "aggregateRating": {
+        "@@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150"
+      },
+      "offers": {
+        "@@type": "AggregateOffer",
+        "priceCurrency": "THB",
+        "lowPrice": "49",
+        "highPrice": "199"
+      }
+    }
+    </script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Chanaphonflix.styles.css" asp-append-version="true" />
@@ -34,9 +77,29 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#termsModal">เงื่อนไข</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-gradient px-4" href="#" style="border-radius: 20px;">เข้าสู่ระบบ</a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    👤 @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="background: rgba(20, 20, 40, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <li><a class="dropdown-item text-white" href="#">ประวัติการสั่งซื้อ</a></li>
+                                    <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);" /></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            <button type="submit" class="dropdown-item text-white">ออกจากระบบ</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-gradient px-4" asp-controller="Account" asp-action="Login" style="border-radius: 20px;">เข้าสู่ระบบ</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,0 +1,55 @@
+@model Chanaphonflix.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "เข้าสู่ระบบ - Chanaphonflix";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+                        🔐 เข้าสู่ระบบ
+                    </h2>
+                    <p class="text-center text-white-50 mb-4">เข้าสู่ระบบเพื่อเริ่มใช้งาน Chanaphonflix</p>
+
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label text-white"></label>
+                            <input asp-for="Email" class="form-control" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 10px;" placeholder="example@email.com" autofocus />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label text-white"></label>
+                            <input asp-for="Password" class="form-control" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 10px;" placeholder="••••••••" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);" />
+                            <label asp-for="RememberMe" class="form-check-label text-white">
+                                จำฉันไว้ในระบบ
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; font-weight: 600; font-size: 1.1rem;">
+                            เข้าสู่ระบบ
+                        </button>
+
+                        <div class="text-center mt-4">
+                            <p class="text-white-50 mb-0">ยังไม่มีบัญชี? <a asp-action="Register" class="text-white fw-bold" style="text-decoration: none;">สมัครสมาชิก</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

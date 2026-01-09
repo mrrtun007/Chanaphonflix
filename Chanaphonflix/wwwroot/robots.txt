@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /Account/Logout
+
+Sitemap: https://chanaphonflix.onrender.com/sitemap.xml

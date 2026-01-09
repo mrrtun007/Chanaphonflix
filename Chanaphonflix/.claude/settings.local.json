@@ -8,7 +8,13 @@
       "Bash(git commit:*)",
       "Bash(dotnet --version:*)",
       "Bash(git push:*)",
-      "Bash(git remote add:*)"
+      "Bash(git remote add:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(dotnet tool install:*)",
+      "Bash(dotnet tool update:*)",
+      "Bash(timeout 10 dotnet run:*)"
     ]
   }
 }
