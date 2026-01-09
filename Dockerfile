@@ -1,0 +1,28 @@
+# Use the official .NET SDK image for building
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy csproj and restore dependencies
+COPY ["Chanaphonflix/Chanaphonflix.csproj", "Chanaphonflix/"]
+RUN dotnet restore "Chanaphonflix/Chanaphonflix.csproj"
+
+# Copy everything else and build
+COPY . .
+WORKDIR "/src/Chanaphonflix"
+RUN dotnet build "Chanaphonflix.csproj" -c Release -o /app/build
+
+# Publish the app
+FROM build AS publish
+RUN dotnet publish "Chanaphonflix.csproj" -c Release -o /app/publish
+
+# Use the runtime image for the final image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+# Expose port
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+
+# Start the app
+ENTRYPOINT ["dotnet", "Chanaphonflix.dll"]
