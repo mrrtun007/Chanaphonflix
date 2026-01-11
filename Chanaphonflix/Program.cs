@@ -1,5 +1,6 @@
 using Chanaphonflix.Data;
 using Chanaphonflix.Models;
+using Chanaphonflix.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add HttpClient for BYShop API
+builder.Services.AddHttpClient<BYShopApiService>();
 
 // Add Database Context (SQLite)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

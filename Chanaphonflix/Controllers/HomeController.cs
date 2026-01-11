@@ -1,4 +1,5 @@
 using Chanaphonflix.Models;
+using Chanaphonflix.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,16 +8,102 @@ namespace Chanaphonflix.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly BYShopApiService _byshopApi;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, BYShopApiService byshopApi)
         {
             _logger = logger;
+            _byshopApi = byshopApi;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = GetStreamingProducts();
+            // ดึงสินค้าจาก BYShop API
+            var byshopProducts = await _byshopApi.GetAllProductsAsync();
+
+            // แปลงข้อมูลจาก BYShop เป็น StreamingProduct
+            var products = ConvertBYShopToStreamingProducts(byshopProducts);
+
+            // ถ้าไม่มีข้อมูลจาก API ให้ใช้ข้อมูลสำรอง
+            if (!products.Any())
+            {
+                products = GetStreamingProducts();
+            }
+
             return View(products);
+        }
+
+        private List<StreamingProduct> ConvertBYShopToStreamingProducts(List<BYShopProduct> byshopProducts)
+        {
+            var streamingProducts = new List<StreamingProduct>();
+
+            foreach (var product in byshopProducts)
+            {
+                // แปลงเฉพาะสินค้า Streaming categories
+                if (IsStreamingCategory(product.category))
+                {
+                    streamingProducts.Add(new StreamingProduct
+                    {
+                        Id = int.TryParse(product.id, out int id) ? id : 0,
+                        ServiceName = ExtractServiceName(product.name ?? ""),
+                        PackageType = ExtractPackageType(product.name ?? ""),
+                        ScreenType = ExtractScreenType(product.name ?? ""),
+                        Quality = ExtractQuality(product.name ?? ""),
+                        OriginalPrice = decimal.TryParse(product.price, out decimal price) ? price : 0,
+                        DiscountedPrice = decimal.TryParse(product.price_vip, out decimal priceVip) ? priceVip : 0,
+                        Stock = int.TryParse(product.stock, out int stock) ? stock : 0,
+                        Description = product.product_info ?? "",
+                        Features = new List<string>(),
+                        ImageUrl = product.img ?? "/images/default.png",
+                        IsPopular = false
+                    });
+                }
+            }
+
+            return streamingProducts;
+        }
+
+        private bool IsStreamingCategory(string? category)
+        {
+            if (string.IsNullOrEmpty(category)) return false;
+
+            var streamingCategories = new[] { "netflix", "youtube", "disney", "hbo", "viu", "iqiyi", "bein", "spotify", "trueid", "aisplay" };
+            return streamingCategories.Any(c => category.ToLower().Contains(c));
+        }
+
+        private string ExtractServiceName(string productName)
+        {
+            if (productName.Contains("Netflix", StringComparison.OrdinalIgnoreCase)) return "Netflix";
+            if (productName.Contains("YouTube", StringComparison.OrdinalIgnoreCase)) return "YouTube Premium";
+            if (productName.Contains("Disney", StringComparison.OrdinalIgnoreCase)) return "Disney+";
+            if (productName.Contains("HBO", StringComparison.OrdinalIgnoreCase)) return "HBO GO";
+            if (productName.Contains("VIU", StringComparison.OrdinalIgnoreCase)) return "VIU Premium";
+            if (productName.Contains("iQIYI", StringComparison.OrdinalIgnoreCase)) return "iQIYI VIP";
+            if (productName.Contains("Bein", StringComparison.OrdinalIgnoreCase)) return "BeinSports";
+            return productName;
+        }
+
+        private string ExtractPackageType(string productName)
+        {
+            if (productName.Contains("รายวัน") || productName.Contains("1 วัน")) return "รายวัน";
+            if (productName.Contains("รายเดือน") || productName.Contains("1 เดือน")) return "รายเดือน";
+            if (productName.Contains("รายปี") || productName.Contains("1 ปี")) return "รายปี";
+            return "รายเดือน";
+        }
+
+        private string ExtractScreenType(string productName)
+        {
+            if (productName.Contains("จอส่วนตัว") || productName.Contains("Private")) return "จอส่วนตัว";
+            if (productName.Contains("จอแชร์") || productName.Contains("Share")) return "จอแชร์";
+            return "จอส่วนตัว";
+        }
+
+        private string ExtractQuality(string productName)
+        {
+            if (productName.Contains("4K") || productName.Contains("UHD")) return "4K UltraHD";
+            if (productName.Contains("Full HD") || productName.Contains("FHD")) return "Full HD";
+            if (productName.Contains("HD")) return "HD";
+            return "HD";
         }
 
         private List<StreamingProduct> GetStreamingProducts()
