@@ -18,16 +18,33 @@ namespace Chanaphonflix.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // ดึงสินค้าจาก BYShop API
-            var byshopProducts = await _byshopApi.GetAllProductsAsync();
+            List<StreamingProduct> products;
 
-            // แปลงข้อมูลจาก BYShop เป็น StreamingProduct
-            var products = ConvertBYShopToStreamingProducts(byshopProducts);
-
-            // ถ้าไม่มีข้อมูลจาก API ให้ใช้ข้อมูลสำรอง
-            if (!products.Any())
+            try
             {
+                // ดึงสินค้าจาก BYShop API
+                var byshopProducts = await _byshopApi.GetAllProductsAsync();
+
+                // แปลงข้อมูลจาก BYShop เป็น StreamingProduct
+                products = ConvertBYShopToStreamingProducts(byshopProducts);
+
+                // ถ้าไม่มีข้อมูลจาก API ให้ใช้ข้อมูลสำรอง
+                if (!products.Any())
+                {
+                    _logger.LogWarning("No products returned from BYShop API, using fallback data");
+                    products = GetStreamingProducts();
+                    ViewBag.ApiStatus = "Using local data (API unavailable)";
+                }
+                else
+                {
+                    ViewBag.ApiStatus = "Connected to BYShop API";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching products from BYShop API");
                 products = GetStreamingProducts();
+                ViewBag.ApiStatus = "Using local data (API error)";
             }
 
             return View(products);

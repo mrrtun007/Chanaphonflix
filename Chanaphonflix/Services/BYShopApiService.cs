@@ -25,14 +25,24 @@ public class BYShopApiService
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<BYShopProductResponse>(content);
+
+            // Log the raw JSON for debugging
+            Console.WriteLine($"API Response: {content.Substring(0, Math.Min(500, content.Length))}...");
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var result = JsonSerializer.Deserialize<BYShopProductResponse>(content, options);
 
             return result?.data ?? new List<BYShopProduct>();
         }
         catch (Exception ex)
         {
-            // Log error
+            // Log detailed error
             Console.WriteLine($"Error fetching products: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
             return new List<BYShopProduct>();
         }
     }
