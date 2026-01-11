@@ -82,12 +82,14 @@
                     </div>
 
                     <div class="d-grid gap-2 mt-3">
-                        <button class="btn btn-gradient"
+                        <button type="button"
+                                class="btn btn-gradient"
                                 onclick="orderProduct(@product.Id, '@product.ServiceName', @product.DiscountedPrice)"
                                 @(product.Stock == 0 ? "disabled" : "")>
                             🛒 สั่งซื้อ
                         </button>
-                        <button class="btn btn-outline-custom"
+                        <button type="button"
+                                class="btn btn-outline-custom"
                                 data-bs-toggle="modal"
                                 data-bs-target="#productModal"
                                 onclick="showProductDetails(@product.Id)">
@@ -183,18 +185,24 @@
         }
 
         function orderProduct(productId, productName, price) {
+            console.log('Order clicked:', { productId, productName, price });
+
             @if (User.Identity?.IsAuthenticated == true)
             {
                 @:// User is logged in, redirect to order page
+                @:console.log('User is authenticated, redirecting to order page');
                 @:window.location.href = `/Order/Buy/${productId}`;
             }
             else
             {
                 @:// User not logged in, show alert and redirect to login
+                @:console.log('User not authenticated, showing login prompt');
                 @:if (confirm(`กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อ\n\nสินค้า: ${productName}\nราคา: ${price} บาท\n\nต้องการเข้าสู่ระบบหรือไม่?`)) {
                     @:window.location.href = '/Account/Login?returnUrl=' + encodeURIComponent(`/Order/Buy/${productId}`);
                 @:}
             }
+
+            return false; // Prevent default action
         }
     </script>
 }
